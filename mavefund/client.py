@@ -45,6 +45,9 @@ class Client:
 
         try:
             resp = self.__session.get(url)
+
+            resp.raise_for_status()
+
         except requests.exceptions.Timeout:
             logger.error("request timeout, please try again in 5 minutes or report this bug to us!")
         except requests.exceptions.ConnectionError:
@@ -56,8 +59,6 @@ class Client:
                 stack_info=True
             )
         else:
-            resp.raise_for_status()
-
             symbol = resp.json()
             symbol = Symbol(**symbol)
 

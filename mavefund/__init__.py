@@ -3,8 +3,8 @@
 Examples:
     >>> from mavefund import Client
 
-    >>> with Client(api_key="YOUR_API_KEY") as client:
-    ...     records = client("AAPL")
+    >>> with Client(api_key="YOUR_API_KEY") as cl:
+    ...     records = cl("AAPL")
 """
 
 from .symbol import Symbol
@@ -16,4 +16,4 @@ __all__ = (
 )
 
 
-__version__ = 0, 0, 1
+__version__ = 0, 0, 2

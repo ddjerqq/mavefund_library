@@ -26,7 +26,7 @@ class Client:
         :param api_key: The API key to use for authentication. get yours at https://mavefund.com
         """
         self.__api_key = api_key
-        self.__base_url = "https://api.mavefund.com"
+        self.__base_url = "https://mavefund.com"
 
         self.__session = requests.Session()
         self.__session.cookies.set("token", self.__api_key)

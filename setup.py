@@ -20,6 +20,7 @@ setuptools.setup(
     install_requires=[
         "pandas",
         "requests",
+        "pydantic",
     ],
     packages=["mavefund"],
 )

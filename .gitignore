@@ -1,0 +1,5 @@
+/.pytest_cache/
+/.idea/
+/build/
+/dist/
+/mavefund.egg-info/

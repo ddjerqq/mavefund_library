@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-KEY = os.getenv("TEST_KEY")
+KEY = os.getenv("TEST_TOKEN")
 
 
 def test_client_works():

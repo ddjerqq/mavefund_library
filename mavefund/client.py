@@ -26,7 +26,7 @@ class Client:
         :param api_key: The API key to use for authentication. get yours at https://mavefund.com
         """
         self.__api_key = api_key
-        self.__base_url = "https://localhost"
+        self.__base_url = "https://mavefund.com"
 
         self.__session = requests.Session()
         self.__session.cookies.set("token", self.__api_key)
@@ -43,13 +43,9 @@ class Client:
         """
         url = f"{self.__base_url}/api/v1/records/get/{symbol}"
 
-        resp = self.__session.get(url, verify=False)
-
-        resp.raise_for_status()
-
-
         try:
-            pass
+            resp = self.__session.get(url, verify=False)
+            resp.raise_for_status()
 
         except requests.exceptions.Timeout:
             logger.error("request timeout, please try again in 5 minutes or report this bug to us!")

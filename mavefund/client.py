@@ -26,7 +26,7 @@ class Client:
         :param api_key: The API key to use for authentication. get yours at https://mavefund.com
         """
         self.__api_key = api_key
-        self.__base_url = "https://mavefund.com"
+        self.__base_url = "https://localhost"
 
         self.__session = requests.Session()
         self.__session.cookies.set("token", self.__api_key)
@@ -41,23 +41,29 @@ class Client:
         :param symbol: The stock ticker symbol for the company.
         :return: A pandas DataFrame.
         """
-        url = f"{self.__base_url}/api/v1/records/get?ticker={symbol}"
+        url = f"{self.__base_url}/api/v1/records/get/{symbol}"
+
+        resp = self.__session.get(url, verify=False)
+
+        resp.raise_for_status()
+
 
         try:
-            resp = self.__session.get(url)
-
-            resp.raise_for_status()
+            pass
 
         except requests.exceptions.Timeout:
             logger.error("request timeout, please try again in 5 minutes or report this bug to us!")
+
         except requests.exceptions.ConnectionError:
             logger.error("connection error, please try again in 5 minutes or report this bug to us!")
+
         except Exception as e:
             logger.exception(
                 "exception occurred while trying to fetch data. please report this to us!\n"
                 f"{e}",
                 stack_info=True
             )
+
         else:
             symbol = resp.json()
             symbol = Symbol(**symbol)

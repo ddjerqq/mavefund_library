@@ -1,3 +1,5 @@
-from dotenv import load_dotenv
+import pytest
 
-load_dotenv()
+
+if __name__ == "__main__":
+    pytest.main()

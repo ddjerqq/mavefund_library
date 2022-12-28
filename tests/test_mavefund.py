@@ -1,12 +1,14 @@
 import os
 from mavefund import Client
+from dotenv import load_dotenv
 
+load_dotenv()
 
 KEY = os.getenv("TEST_KEY")
 
 
-def test_it_works():
+def test_client_works():
     client = Client(KEY)
     df = client("AAPL")
     print(df)
-    client.close()
+    assert df is not None

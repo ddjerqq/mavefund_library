@@ -7,12 +7,6 @@ class TickerNotFoundException(Exception):
 
 
 
-class InvalidAPIKeyException(Exception):
-    def __str__(self):
-        return f"invalid API_KEY"
-
-
-
 class InvalidTickerException(Exception):
     def __init__(self, ticker):
         self.ticker = ticker

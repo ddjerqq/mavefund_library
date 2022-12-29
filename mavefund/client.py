@@ -7,8 +7,8 @@ import requests
 import logging
 import warnings
 
-from .symbol import Symbol, SymbolDto
-from . import error
+from .symbol import SymbolDto
+import error
 
 
 __all__ = (

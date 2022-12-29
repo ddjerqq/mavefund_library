@@ -1,16 +1,21 @@
 from __future__ import annotations
 
+import re
+
 import pandas as pd
 import requests
 import logging
+import warnings
+
+from .symbol import Symbol, SymbolDto
+from . import error
 
 
 __all__ = (
     "Client"
 )
 
-from . import Symbol
-
+warnings.filterwarnings("ignore")
 logger = logging.getLogger("mavefund")
 
 
@@ -34,13 +39,19 @@ class Client:
 
     def __call__(
             self,
-            symbol: str,
+            ticker: str,
     ) -> pd.DataFrame:
         """Get records for a given company as a pandas DataFrame.
 
-        :param symbol: The stock ticker symbol for the company.
+        :param ticker: The stock ticker symbol for the company.
         :return: A pandas DataFrame.
         """
+        symbol_regex = r"^[a-zA-Z]{1,5}$"
+
+        if not re.match(symbol_regex, ticker):
+            raise error.InvalidTickerException(ticker)
+
+        symbol = ticker.upper()
         url = f"{self.__base_url}/api/v1/records/get/{symbol}"
 
         try:
@@ -48,10 +59,31 @@ class Client:
             resp.raise_for_status()
 
         except requests.exceptions.Timeout:
-            logger.error("request timeout, please try again in 5 minutes or report this bug to us!")
+            logger.error(
+                "request timeout, please check your internet connection,"
+                "or the server status at https://mavefund.com please try again in 5 minutes or report this bug to us!"
+            )
 
         except requests.exceptions.ConnectionError:
-            logger.error("connection error, please try again in 5 minutes or report this bug to us!")
+            logger.error(
+                "connection error, servers may be down. please try again in 5 minutes or report this bug to us!"
+            )
+
+        except requests.exceptions.HTTPError as e:
+            response: requests.Response = e.response
+            if response.status_code == 404:
+                raise error.TickerNotFoundException(symbol)
+            elif response.status_code == 401:
+                raise error.UnauthorizedException()
+            elif response.status_code == 403:
+                raise error.ForbiddenException()
+            else:
+                logger.exception(
+                    "HTTPError occurred while trying to fetch data. "
+                    "please report this to us! \n"
+                    f"{e}",
+                    stack_info=True
+                )
 
         except Exception as e:
             logger.exception(
@@ -62,7 +94,8 @@ class Client:
 
         else:
             symbol = resp.json()
-            symbol = Symbol(**symbol)
+            symbol_dto = SymbolDto(**symbol)
+            symbol = symbol_dto.to_symbol()
 
             return symbol.df
 

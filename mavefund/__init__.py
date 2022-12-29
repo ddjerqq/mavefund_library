@@ -13,7 +13,8 @@ from .client import Client
 __all__ = (
     "Client",
     "Symbol",
+    "error",
 )
 
 
-__version__ = 0, 0, 5
+__version__ = 0, 0, 7

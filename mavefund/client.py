@@ -8,7 +8,7 @@ import logging
 import warnings
 
 from .symbol import SymbolDto
-import error
+from . import error
 
 
 __all__ = (
